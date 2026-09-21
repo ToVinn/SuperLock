@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login — Neper SuperLock</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 font-sans text-slate-800">
+
+<div class="min-h-screen grid lg:grid-cols-2">
+
+  <!-- Kolom kiri: form -->
+  <div class="flex items-center justify-center px-6 py-12 lg:px-16">
+    <div class="w-full max-w-md">
+
+      <div class="mb-8">
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Selamat datang 👋</h1>
+        <p class="mt-2 text-sm text-slate-500">Masuk untuk mengelola penitipan HP.</p>
+      </div>
+
+      <!-- Kartu form -->
+      <div class="rounded-2xl bg-white p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.06)] ring-1 ring-slate-100">
+
+        <!-- Tab -->
+        <div class="grid grid-cols-2 gap-1 rounded-xl bg-slate-100 p-1 mb-6" role="tablist">
+          <button id="tab-login"  onclick="gantiTab('login')"  role="tab" aria-selected="true"
+            class="py-2.5 text-sm font-semibold rounded-lg bg-white text-teal-600 shadow-sm transition-all duration-300">Login</button>
+          <button id="tab-signup" onclick="gantiTab('signup')" role="tab" aria-selected="false"
+            class="py-2.5 text-sm font-semibold rounded-lg text-slate-500 hover:text-teal-600 transition-all duration-300">Sign Up</button>
+        </div>
+
+        <!-- Form Login -->
+        <form id="form-login" class="space-y-5" onsubmit="event.preventDefault(); notif(this);">
+          <div>
+            <label for="email" class="block text-sm font-medium mb-1.5">Email</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 pointer-events-none">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+              </span>
+              <input id="email" type="email" required placeholder="nama@sekolah.id"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm placeholder:text-slate-400
+                       focus:bg-white focus:ring-2 focus:ring-teal-500/60 focus:border-teal-500 focus:outline-none
+                       transition-all duration-300" />
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="password" class="block text-sm font-medium">Password</label>
+              <a href="#" class="text-xs font-medium text-teal-600 hover:text-teal-700 hover:underline transition-colors duration-300">Forgot password?</a>
+            </div>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 pointer-events-none">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75M3.75 18a2.25 2.25 0 0 1 2.25-2.25h12A2.25 2.25 0 0 1 20.25 18v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V18Z"/></svg>
+              </span>
+              <input id="password" type="password" required minlength="6" placeholder="••••••••"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-11 py-3 text-sm placeholder:text-slate-400
+                       focus:bg-white focus:ring-2 focus:ring-teal-500/60 focus:border-teal-500 focus:outline-none
+                       transition-all duration-300" />
+              <button type="button" onclick="lihat(this)" aria-label="Lihat password"
+                class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-teal-600 transition-colors duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <label class="flex items-center gap-2 text-sm text-slate-600 select-none cursor-pointer">
+            <input type="checkbox" class="rounded border-slate-300 text-teal-600 focus:ring-teal-500/60 transition" checked> Ingat saya
+          </label>
+
+          <button type="submit"
+            class="w-full rounded-xl bg-teal-600 py-3 text-sm font-bold text-white
+                   shadow-lg shadow-teal-600/25
+                   hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30 hover:-translate-y-0.5
+                   active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2
+                   transition-all duration-300 ease-in-out">
+            Masuk
+          </button>
+        </form>
+
+        <!-- Form Sign Up -->
+        <form id="form-signup" class="space-y-5 hidden" onsubmit="event.preventDefault(); notif(this);">
+          <div>
+            <label for="nama" class="block text-sm font-medium mb-1.5">Nama lengkap</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 pointer-events-none">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+              </span>
+              <input id="nama" type="text" required placeholder="Nama Anda"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm placeholder:text-slate-400
+                       focus:bg-white focus:ring-2 focus:ring-teal-500/60 focus:border-teal-500 focus:outline-none transition-all duration-300" />
+            </div>
+          </div>
+          <div>
+            <label for="email2" class="block text-sm font-medium mb-1.5">Email</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 pointer-events-none">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+              </span>
+              <input id="email2" type="email" required placeholder="nama@sekolah.id"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm placeholder:text-slate-400
+                       focus:bg-white focus:ring-2 focus:ring-teal-500/60 focus:border-teal-500 focus:outline-none transition-all duration-300" />
+            </div>
+          </div>
+          <div>
+            <label for="password2" class="block text-sm font-medium mb-1.5">Password</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 pointer-events-none">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75M3.75 18a2.25 2.25 0 0 1 2.25-2.25h12A2.25 2.25 0 0 1 20.25 18v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V18Z"/></svg>
+              </span>
+              <input id="password2" type="password" required minlength="6" placeholder="Minimal 6 karakter"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm placeholder:text-slate-400
+                       focus:bg-white focus:ring-2 focus:ring-teal-500/60 focus:border-teal-500 focus:outline-none transition-all duration-300" />
+            </div>
+          </div>
+          <button type="submit"
+            class="w-full rounded-xl bg-teal-600 py-3 text-sm font-bold text-white
+                   shadow-lg shadow-teal-600/25
+                   hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30 hover:-translate-y-0.5
+                   active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2
+                   transition-all duration-300 ease-in-out">
+            Daftar
+          </button>
+        </form>
+
+        <p id="pesan" class="hidden mt-4 rounded-lg bg-teal-50 px-4 py-2.5 text-center text-xs font-medium text-teal-700 transition-opacity duration-300"></p>
+      </div>
+
+      <p class="mt-6 text-center text-xs text-slate-400">© 2026 NEPER · SuperLock</p>
+    </div>
+  </div>
+
+  <!-- Kolom kanan: hero kurva gradasi -->
+  <div class="relative overflow-hidden hidden lg:block">
+    <div class="absolute inset-0 bg-gradient-to-br from-teal-500 via-teal-600 to-emerald-700"></div>
+
+    <!-- Kurva atas -->
+    <svg class="absolute top-0 left-0 w-[140%] text-white/10" viewBox="0 0 1440 320" fill="currentColor" preserveAspectRatio="none">
+      <path d="M0,160 C360,320 720,0 1080,120 C1260,180 1380,140 1440,160 L1440,0 L0,0 Z" opacity=".6"/>
+    </svg>
+
+    <!-- Kurva bawah -->
+    <svg class="absolute bottom-0 left-0 w-full text-white/15" viewBox="0 0 1440 220" fill="currentColor" preserveAspectRatio="none">
+      <path d="M0,96 C240,220 480,0 720,64 C960,128 1200,64 1440,128 L1440,220 L0,220 Z"/>
+    </svg>
+
+    <!-- Blob lembut -->
+    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white/10 blur-2xl"></div>
+    <div class="absolute bottom-10 -left-20 w-80 h-80 rounded-full bg-emerald-300/20 blur-3xl"></div>
+
+    <!-- Konten hero -->
+    <div class="relative h-full flex flex-col items-center justify-center text-white px-16 text-center">
+      <div class="mb-6 w-20 h-20 rounded-3xl bg-white/15 backdrop-blur flex items-center justify-center ring-1 ring-white/25 shadow-xl">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75M3.75 18a2.25 2.25 0 0 1 2.25-2.25h12A2.25 2.25 0 0 1 20.25 18v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V18Z"/></svg>
+      </div>
+      <h2 class="text-4xl font-extrabold tracking-tight drop-shadow-sm">NEPER · SuperLock</h2>
+      <p class="mt-4 max-w-md text-teal-50/90 leading-relaxed">Penitipan HP terpadu untuk sekolah. Aman, terpantau, dan tertib — semua di satu tempat.</p>
+      <div class="mt-10 grid grid-cols-3 gap-8 text-center">
+        <div><p class="text-3xl font-extrabold">24/7</p><p class="mt-1 text-xs uppercase tracking-widest text-teal-100/70">Terpantau</p></div>
+        <div><p class="text-3xl font-extrabold">QR</p><p class="mt-1 text-xs uppercase tracking-widest text-teal-100/70">Kartu &amp; Scan</p></div>
+        <div><p class="text-3xl font-extrabold">100%</p><p class="mt-1 text-xs uppercase tracking-widest text-teal-100/70">Aman</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function gantiTab(t) {
+  const login = t === 'login';
+  document.getElementById('form-login').classList.toggle('hidden', !login);
+  document.getElementById('form-signup').classList.toggle('hidden', login);
+  const a = document.getElementById('tab-login'), b = document.getElementById('tab-signup');
+  const on = ['bg-white','text-teal-600','shadow-sm'], off = ['text-slate-500'];
+  a.className = a.className.replace(/ ?(bg-white|text-teal-600|shadow-sm|text-slate-500)/g, '') + ' ' + (login ? on : off).join(' ');
+  b.className = b.className.replace(/ ?(bg-white|text-teal-600|shadow-sm|text-slate-500)/g, '') + ' ' + (login ? off : on).join(' ');
+  a.setAttribute('aria-selected', login); b.setAttribute('aria-selected', !login);
+}
+function lihat(btn) {
+  const i = btn.parentElement.querySelector('input');
+  i.type = i.type === 'password' ? 'text' : 'password';
+}
+function notif(f) {
+  const p = document.getElementById('pesan');
+  p.textContent = (f.id === 'form-login' ? 'Login' : 'Pendaftaran') + ' berhasil diproses (demo).';
+  p.classList.remove('hidden'); p.classList.add('opacity-0');
+  requestAnimationFrame(() => p.classList.remove('opacity-0'));
+}
+</script>
+</body>
+</html>
