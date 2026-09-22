@@ -192,16 +192,3 @@ docker compose exec web php artisan migrate --force
 Aplikasi berjalan di **http://localhost:8081**, phpMyAdmin di **http://localhost:8082** (root/root), MySQL di port host **3308**.
 
 Perubahan folder `app`, `routes`, `resources/views`, `public`, dan `database` langsung ter-mount ke container — tidak perlu rebuild. Jika `composer.json`/`Dockerfile` berubah, jalankan `docker compose up -d --build`.
-
-## Akun Bawaan (Seeder)
-
-Jalankan `docker compose exec web php artisan db:seed` untuk data contoh (2 kelas, 36 siswa):
-
-| Nama | Username | Password | Peran |
-|---|---|---|---|
-| Administrator | admin | admin123 | admin |
-| Raka Wibowo | raka | admin123 | km (X PPLG 1) |
-| Dewi Lestari | dewi | admin123 | km (X PPLG 2) |
-| Bu Sari | sari | admin123 | guru |
-
-> Segera ganti password bawaan setelah instalasi produksi.
