@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>NEPER — SuperLock</h1>
+  <h1>NEPER SuperLock</h1>
   <p>Sistem Penitipan & Peminjaman HP Sekolah Tingkat Lanjut</p>
   
   <p>
