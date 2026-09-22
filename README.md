@@ -83,8 +83,6 @@
 
 > **Catatan Developer**: Folder kode (`app`, `routes`, `resources`, `public`) ter-mount otomatis. Tidak perlu build ulang saat mengedit kode (kecuali `composer.json` atau `Dockerfile`).
 
-> Segera ubah kata sandi di lingkungan produksi.
-
 ---
 
 ## Alur Kerja (Workflow)
