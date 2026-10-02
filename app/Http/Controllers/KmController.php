@@ -47,6 +47,9 @@ class KmController extends Controller
         ]);
 
         $kmNama = trim($data['km_nama']);
+        $jmlKumpul = 0;
+        $jmlTidak = 0;
+
         foreach ($data['status'] as $siswaId => $st) {
             Penitipan::updateOrCreate(
                 ['siswa_id' => (int) $siswaId, 'tanggal' => $tanggal],
@@ -56,7 +59,11 @@ class KmController extends Controller
                     'km_nama' => $kmNama,
                 ],
             );
+            if ($st === 'kumpul') $jmlKumpul++; else $jmlTidak++;
         }
+
+        $namaKelas = Kelas::find($kelasId)?->nama ?? 'Tidak Diketahui';
+        \App\Models\Aktivitas::catat('Input Pagi', "Menyimpan data pengecekan HP kelas $namaKelas ($jmlKumpul terkumpul, $jmlTidak tidak). Oleh: $kmNama");
 
         return redirect()->route('km', ['kelas' => $kelasId ?: null])->with('pesan', 'Data pengecekan tersimpan.');
     }

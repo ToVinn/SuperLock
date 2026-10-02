@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class RekapController extends Controller
 {
@@ -12,30 +11,50 @@ class RekapController extends Controller
     {
         $tanggal = $request->query('tanggal', now()->toDateString());
 
-        $rows = DB::table('siswa')
-            ->join('kelas', 'kelas.id', '=', 'siswa.kelas_id')
-            ->leftJoin('penitipan', function ($join) use ($tanggal) {
-                $join->on('penitipan.siswa_id', '=', 'siswa.id')
-                    ->where('penitipan.tanggal', '=', $tanggal);
-            })
-            ->selectRaw("kelas.nama AS kelas, COALESCE(penitipan.status,'belum') AS status, COUNT(*) AS jumlah,
-                SUM(CASE WHEN penitipan.jam_ambil IS NOT NULL THEN 1 ELSE 0 END) AS sudah_ambil")
-            ->groupBy('kelas.id', 'kelas.nama', DB::raw("COALESCE(penitipan.status,'belum')"))
-            ->orderBy('kelas.nama')
-            ->get();
+        $kelasData = Kelas::with(['siswa' => function ($q) {
+            $q->orderBy('nama');
+        }, 'siswa.penitipan' => function ($q) use ($tanggal) {
+            $q->where('tanggal', $tanggal);
+        }])->orderBy('nama')->get();
 
         $rekap = [];
+        $rincian = [];
         $adaData = false;
-        foreach ($rows as $r) {
-            if ($r->status !== 'belum') {
-                $adaData = true;
+
+        foreach ($kelasData as $k) {
+            $stat = ['kumpul' => 0, 'pinjam' => 0, 'tidak' => 0, 'belum' => 0, 'ambil' => 0];
+            $listSiswa = [];
+
+            foreach ($k->siswa as $s) {
+                $p = $s->penitipan->first();
+                $st = $p->status ?? 'belum';
+                
+                $stat[$st]++;
+                if ($st !== 'belum') {
+                    $adaData = true;
+                }
+                
+                if ($st === 'kumpul' && $p && $p->jam_ambil) {
+                    $stat['ambil']++;
+                }
+
+                if ($st !== 'belum') {
+                    $listSiswa[] = [
+                        'nama' => $s->nama,
+                        'nis' => $s->nis,
+                        'status' => $st,
+                        'penitipan' => $p
+                    ];
+                }
             }
-            $rekap[$r->kelas][$r->status] = (int) $r->jumlah;
-            if ($r->status === 'kumpul') {
-                $rekap[$r->kelas]['ambil'] = (int) $r->sudah_ambil;
-            }
+
+            // Tetap tampilkan rekap walau kelas kosong penitipan (status belum semua)
+            // agar tabel progres per kelas tetap muncul utuh seperti sebelumnya
+            $rekap[$k->nama] = $stat;
+            // Tampilkan rincian hanya jika ada data selain belum
+            $rincian[$k->nama] = $listSiswa;
         }
 
-        return view('rekap', compact('tanggal', 'rekap', 'adaData'));
+        return view('rekap', compact('tanggal', 'rekap', 'rincian', 'adaData'));
     }
 }

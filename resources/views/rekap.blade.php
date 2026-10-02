@@ -129,6 +129,50 @@
         <tr><th>Sudah Mengambil</th><td><b>{{ $ambil }}</b> <small style="color:var(--abu)">dari {{ $kumpul }} yang mengumpulkan</small></td></tr>
         <tr><th>Belum Mengambil</th><td><b>{{ max(0, $kumpul - $ambil) }}</b> <small style="color:var(--abu)">HP masih dititipkan</small></td></tr>
     </table>
+
+    @if(!empty($rincian[$kelas]))
+    <details style="margin-top:14px;border-top:1px solid var(--garis);padding-top:12px">
+        <summary style="cursor:pointer;font-size:13.5px;font-weight:600;color:var(--biru);user-select:none">Tampilkan Rincian Siswa</summary>
+        <div style="overflow-x:auto;margin-top:10px">
+            <table style="width:100%;font-size:12.5px;min-width:600px;border-collapse:collapse">
+                <tr style="background:#f8fafc;border-bottom:2px solid var(--garis)">
+                    <th style="padding:8px 10px;text-align:left;width:30%">Siswa</th>
+                    <th style="padding:8px 10px;text-align:left;width:15%">Status</th>
+                    <th style="padding:8px 10px;text-align:left;width:25%">Waktu</th>
+                    <th style="padding:8px 10px;text-align:left;width:15%">Petugas / Izin</th>
+                    <th style="padding:8px 10px;text-align:left;width:15%">Keterangan</th>
+                </tr>
+                @foreach ($rincian[$kelas] as $r)
+                <tr style="border-bottom:1px solid var(--garis)">
+                    <td style="padding:8px 10px">
+                        <b>{{ $r['nama'] }}</b><br>
+                        <code style="font-family:Consolas,monospace;font-size:11px;color:var(--abu)">{{ $r['nis'] }}</code>
+                    </td>
+                    <td style="padding:8px 10px">
+                        <span style="display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:{{ $statusMap[$r['status']][1] }}25;color:{{ $statusMap[$r['status']][1] === '#f59e0b' ? '#b45309' : $statusMap[$r['status']][1] }}">
+                            {{ $statusMap[$r['status']][0] }}
+                        </span>
+                        @if($r['status'] === 'kumpul' && $r['penitipan']->jam_ambil)
+                        <div style="margin-top:4px"><span style="display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:#f3f4f6;color:#4b5563;border:1px solid #10b981">Diambil</span></div>
+                        @endif
+                    </td>
+                    <td style="padding:8px 10px;color:var(--abu);font-size:12px;line-height:1.4">
+                        @if($r['penitipan']->jam_kumpul) Kumpul: <b>{{ \Carbon\Carbon::parse($r['penitipan']->jam_kumpul)->format('H:i') }}</b><br> @endif
+                        @if($r['penitipan']->jam_ambil) Ambil: <b>{{ \Carbon\Carbon::parse($r['penitipan']->jam_ambil)->format('H:i') }}</b><br> @endif
+                        @if($r['penitipan']->jam_pinjam) Pinjam: <b>{{ \Carbon\Carbon::parse($r['penitipan']->jam_pinjam)->format('H:i') }}</b><br> @endif
+                        @if($r['penitipan']->jam_kembali) Kembali: <b>{{ \Carbon\Carbon::parse($r['penitipan']->jam_kembali)->format('H:i') }}</b> @endif
+                    </td>
+                    <td style="padding:8px 10px;font-size:12px">
+                        @if($r['penitipan']->km_nama) <div style="margin-bottom:2px">KM: <b>{{ $r['penitipan']->km_nama }}</b></div> @endif
+                        @if($r['penitipan']->guru_nama) <div>Guru: <b>{{ $r['penitipan']->guru_nama }}</b></div> @endif
+                    </td>
+                    <td style="padding:8px 10px;font-size:12px">{{ $r['penitipan']->keterangan ?: '-' }}</td>
+                </tr>
+                @endforeach
+            </table>
+        </div>
+    </details>
+    @endif
 </div>
 @endforeach
 @endsection

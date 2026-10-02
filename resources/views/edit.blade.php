@@ -60,6 +60,7 @@
         'belum' => ['Belum Ditentukan', '#94a3b8'],
         'kumpul' => ['Dikumpulkan', '#10b981'],
         'pinjam' => ['Sedang Dipinjam', '#f59e0b'],
+        'tidak' => ['Tidak Bawa', '#ef4444'],
     ];
     // 'diambil' = penitipan hari ini dengan jam_ambil terisi
     $labelAksi = ['meminjam' => 'Meminjam', 'mengembalikan' => 'Mengembalikan', 'mengambil' => 'Mengambil'];
@@ -97,6 +98,7 @@
         @csrf
         <input type="hidden" name="kelas" value="{{ $kelasId }}">
         <input type="hidden" name="aksi" id="in-aksi">
+        <input type="hidden" name="keterangan" id="in-ket">
         <div class="aksi-baris">
             <h2 style="margin:0">Daftar Siswa — {{ $namaKelas }} ({{ $rows->count() }})</h2>
             <div class="aksi-kiri">
@@ -208,6 +210,7 @@
     });
 
     document.getElementById('md-submit').addEventListener('click', function () {
+        document.getElementById('in-ket').value = ketEl.value;
         document.getElementById('frm-edit').submit();
     });
 

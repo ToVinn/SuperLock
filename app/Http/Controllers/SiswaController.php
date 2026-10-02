@@ -36,6 +36,9 @@ class SiswaController extends Controller
 
         Siswa::create($data);
 
+        $namaKelas = Kelas::find($data['kelas_id'])?->nama;
+        \App\Models\Aktivitas::catat('Tambah Siswa', "Menambahkan siswa baru: {$data['nama']} (NIS: {$data['nis']}) ke kelas $namaKelas.");
+
         return redirect()->route('siswa', ['kelas' => $data['kelas_id']])
             ->with('pesan', "Siswa {$data['nama']} (NIS {$data['nis']}) berhasil ditambahkan.");
     }
@@ -55,6 +58,8 @@ class SiswaController extends Controller
         if ($count) {
             Penitipan::whereIn('siswa_id', $query->get()->modelKeys())->delete();
             $query->delete();
+            $namaKelas = Kelas::find($data['kelas_id'])?->nama;
+            \App\Models\Aktivitas::catat('Hapus Siswa', "Menghapus $count siswa dari kelas $namaKelas beserta data penitipannya.");
         }
 
         return redirect()->route('siswa', ['kelas' => $data['kelas_id']])
@@ -65,23 +70,32 @@ class SiswaController extends Controller
     {
         $data = $request->validate([
             'kelas_id' => ['required', 'integer', 'exists:kelas,id'],
-            'file' => ['required', 'file', 'mimes:csv,txt', 'max:2048'],
+            'file' => ['required', 'file', 'mimes:xlsx,xls', 'max:2048'],
         ]);
 
-        $lines = file($data['file']->getRealPath(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $lines = array_map(fn ($l) => str_replace("\xEF\xBB\xBF", '', $l), $lines ?: []);
-        $delimiter = $lines && str_contains($lines[0], ';') ? ';' : ',';
+        $xlsx = \Shuchkin\SimpleXLSX::parse($data['file']->getRealPath());
+        if (!$xlsx) {
+            return back()->with('pesan', 'Gagal membaca file Excel: ' . \Shuchkin\SimpleXLSX::parseError());
+        }
 
         $tambah = 0;
         $lewati = 0;
-        foreach ($lines as $i => $line) {
-            $cells = array_map('trim', str_getcsv($line, $delimiter));
-            if (count($cells) >= 3) $cells = array_slice($cells, -2);
-            if (count($cells) < 2 || $cells[0] === '' || $cells[1] === '') { $lewati++; continue; }
-            [$nis, $nama] = $cells;
+        foreach ($xlsx->rows() as $i => $cells) {
+            $cells = array_map(function($c) { return trim((string) $c); }, $cells);
+            
+            $nis = $cells[0] ?? '';
+            $nama = $cells[1] ?? '';
+
+            if ($nis === '' || $nama === '') { $lewati++; continue; }
             if ($i === 0 && stripos($nis.$nama, 'nis') !== false) continue;
+            
             Siswa::insertOrIgnore(['nis' => $nis, 'nama' => $nama, 'kelas_id' => $data['kelas_id']])
                 ? $tambah++ : $lewati++;
+        }
+
+        if ($tambah > 0) {
+            $namaKelas = Kelas::find($data['kelas_id'])?->nama;
+            \App\Models\Aktivitas::catat('Impor Siswa', "Mengimpor data siswa ke kelas $namaKelas ($tambah ditambahkan).");
         }
 
         return redirect()->route('siswa', ['kelas' => $data['kelas_id']])

@@ -30,6 +30,7 @@ class AuthController extends Controller
             throw ValidationException::withMessages(['username' => 'Username atau password salah.']);
         }
         $request->session()->regenerate();
+        \App\Models\Aktivitas::catat('Login', 'Masuk ke sistem.');
 
         return redirect()->route($user->role === 'km' ? 'km' : 'monitoring');
     }

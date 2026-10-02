@@ -90,8 +90,8 @@
             <form method="post" action="{{ route('siswa.import') }}" enctype="multipart/form-data" style="display:flex;align-items:center;gap:6px">
                 @csrf
                 <input type="hidden" name="kelas_id" value="{{ $kelasId }}">
-                <input type="file" name="file" accept=".csv,text/csv" required style="font-size:12px">
-                <button type="submit" class="btn-kecil">Impor CSV</button>
+                <input type="file" name="file" accept=".xlsx,.xls" required style="font-size:12px">
+                <button type="submit" class="btn-kecil">Impor Excel</button>
             </form>
             <button type="button" class="btn-kecil btn-merah" onclick="hapus(false)">Hapus Terpilih</button>
             <button type="button" class="btn-kecil btn-merah" onclick="hapus(true)">Hapus Semua</button>
@@ -117,13 +117,13 @@
 <script>
     function hapus(semua) {
         var frm = document.getElementById('frm-hapus');
-        var dipilih = frm.querySelectorAll('input[name="ids[]"]:checked');
+        var dipilih = document.querySelectorAll('input[name="ids[]"]:checked');
         if (!semua && dipilih.length === 0) { alert('Centang siswa yang mau dihapus dulu.'); return; }
         var teks = semua || dipilih.length === 0
             ? 'Hapus SEMUA siswa di kelas {{ $kelasAktif->nama }}?'
             : 'Hapus ' + dipilih.length + ' siswa terpilih?';
         if (!confirm(teks + '\nData penitipan terkait ikut terhapus.')) return;
-        if (!semua) { dipilih.forEach(function (c) { c.form = frm; }); }
+        if (!semua) { dipilih.forEach(function (c) { frm.appendChild(c.cloneNode(true)); }); }
         frm.submit();
     }
     var ps = document.getElementById('pilih-semua');

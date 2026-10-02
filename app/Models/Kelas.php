@@ -9,4 +9,9 @@ class Kelas extends Model
     protected $table = 'kelas';
     protected $fillable = ['nama'];
     public $timestamps = false;
+
+    public function siswa()
+    {
+        return $this->hasMany(Siswa::class, 'kelas_id');
+    }
 }

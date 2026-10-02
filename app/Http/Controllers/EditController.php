@@ -29,7 +29,14 @@ class EditController extends Controller
             }
         }
 
-        return view('edit', compact('kelasId', 'kelasList', 'siswaCount', 'rows', 'namaKelas'));
+        $statusMap = [
+            'belum' => ['Belum', '#e5e7eb'],
+            'kumpul' => ['Terkumpul', '#dcfce7'],
+            'pinjam' => ['Dipinjam', '#fef9c3'],
+            'tidak' => ['Tidak Bawa', '#f3f4f6'],
+        ];
+
+        return view('edit', compact('kelasId', 'kelasList', 'siswaCount', 'rows', 'namaKelas', 'statusMap'));
     }
 
     public function update(Request $request)
@@ -53,6 +60,8 @@ class EditController extends Controller
             ->with(['penitipan' => fn ($q) => $q->where('tanggal', $tanggal)])
             ->get();
 
+        $namaSiswaBerhasil = [];
+
         foreach ($siswaList as $s) {
             $p = $s->penitipan->first();
             $st = $p->status ?? 'belum';
@@ -74,6 +83,18 @@ class EditController extends Controller
                 $changes + ['guru_nama' => $guru, 'keterangan' => $keterangan],
             );
             $berhasil++;
+            $namaSiswaBerhasil[] = $s->nama;
+        }
+
+        if ($berhasil > 0) {
+            $aksiMap = [
+                'meminjam' => 'meminjam HP',
+                'mengembalikan' => 'mengembalikan HP',
+                'mengambil' => 'mengambil HP',
+            ];
+            $deskripsi = 'Memproses ' . $berhasil . ' siswa (' . $aksiMap[$data['aksi']] . '): ' . implode(', ', $namaSiswaBerhasil);
+            if ($keterangan) $deskripsi .= " | Ket: $keterangan";
+            \App\Models\Aktivitas::catat('Edit Status', $deskripsi);
         }
 
         $pesan = $berhasil.' data diperbarui.';

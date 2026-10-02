@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>NEPER SuperLock</h1>
+  <h1>NEPER — SuperLock</h1>
   <p>Sistem Penitipan & Peminjaman HP Sekolah Tingkat Lanjut</p>
   
   <p>
@@ -82,6 +82,16 @@
 - **MySQL Host**: Port `3308`
 
 > **Catatan Developer**: Folder kode (`app`, `routes`, `resources`, `public`) ter-mount otomatis. Tidak perlu build ulang saat mengedit kode (kecuali `composer.json` atau `Dockerfile`).
+
+### Akun Bawaan (Seeder)
+| Nama | Username | Password | Peran |
+|---|---|---|---|
+| Administrator | `admin` | `admin123` | Admin |
+| Raka Wibowo | `raka` | `admin123` | KM (X PPLG 1) |
+| Dewi Lestari | `dewi` | `admin123` | KM (X PPLG 2) |
+| Bu Sari | `sari` | `admin123` | Guru |
+
+> Segera ubah kata sandi di lingkungan produksi.
 
 ---
 
