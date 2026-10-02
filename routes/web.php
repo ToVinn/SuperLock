@@ -3,7 +3,6 @@
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EditController;
-use App\Http\Controllers\KartuController;
 use App\Http\Controllers\KmController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\RekapController;
