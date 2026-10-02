@@ -4,7 +4,6 @@
   
   <p>
     <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel">
-    <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
     <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
     <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
   </p>
@@ -12,7 +11,7 @@
 
 ---
 
-**Neper PhoneLock** adalah platform manajemen penitipan gawai (HP) untuk lingkungan sekolah. Aplikasi ini merampingkan proses penitipan HP oleh siswa sebelum KBM, pencatatan pinjaman darurat, hingga pengambilan massal saat jam pulang dengan integrasi pemindai QR Code.
+**Neper PhoneLock** adalah platform manajemen penitipan gawai (HP) untuk lingkungan sekolah. Aplikasi ini merampingkan proses penitipan HP oleh siswa sebelum KBM, pencatatan pinjaman darurat, hingga pengambilan massal saat jam pulang.
 
 ## Daftar Isi
 
@@ -38,11 +37,7 @@
 - **Validasi Cerdas**: Tombol aksi beradaptasi dengan status siswa. Mencegah aksi ilegal.
 - **Pencatatan Detail**: Otomatis menyimpan `guru_nama`, `keterangan`, dan `timestamp`.
 
-### 3. Pengambilan via Pemindai QR
-- **Pengambilan Kelas (KM)**: Pindai 1 QR Ketua Kelas untuk mengembalikan semua HP di kelas secara instan.
-- **Pinjam/Ambil Individu**: Integrasi kamera untuk verifikasi instan.
-
-### 4. Portal Khusus Ketua Kelas (KM)
+### 3. Portal Khusus Ketua Kelas (KM)
 - Antarmuka khusus untuk KM melakukan pengecekan pagi. Terkunci aman hanya untuk kelas masing-masing.
 
 ---
@@ -51,37 +46,32 @@
 
 - **Backend**: Laravel (PHP 8.4)
 - **Database**: MySQL 8
-- **Frontend**: Blade Templating, HTML5-QRCode, Chart.js
-- **Environment**: Docker & Docker Compose
+- **Frontend**: Blade Templating, Chart.js
 
 ---
 
 ## Instalasi & Konfigurasi
 
-### Prasyarat
-- Docker & Docker Compose terinstal.
-
 ### Langkah-langkah
 
-1. **Jalankan Container**
+1. **Install Dependensi**
    ```bash
-   docker compose up -d
+   composer install
+   npm install && npm run build
    ```
-2. **Migrasi Database**
+2. **Konfigurasi Environment**
+   Salin `.env.example` ke `.env` dan atur koneksi database.
    ```bash
-   docker compose exec web php artisan migrate --force
+   php artisan key:generate
    ```
-3. **Data Awal (Seeder)**
+3. **Migrasi Database & Seeder**
    ```bash
-   docker compose exec web php artisan db:seed
+   php artisan migrate --seed
    ```
-
-### Akses Layanan
-- **Web App**: `http://localhost:8081`
-- **phpMyAdmin**: `http://localhost:8082` (User: `root` / Pass: `root`)
-- **MySQL Host**: Port `3308`
-
-> **Catatan Developer**: Folder kode (`app`, `routes`, `resources`, `public`) ter-mount otomatis. Tidak perlu build ulang saat mengedit kode (kecuali `composer.json` atau `Dockerfile`).
+4. **Jalankan Server**
+   ```bash
+   php artisan serve
+   ```
 
 ### Akun Bawaan (Seeder)
 | Nama | Username | Password | Peran |
@@ -101,9 +91,9 @@
 <summary><b>Klik untuk melihat urutan harian</b></summary>
 
 1. **PAGI**: Ketua Kelas (KM) login, memvalidasi HP yang dikumpulkan, menandai status per siswa.
-2. **SIANG (KBM)**: Guru scan QR siswa atau klik Edit Massal. Status menjadi Dipinjam.
-3. **SIANG (Selesai KBM)**: Guru scan QR lagi. Status kembali Dikumpulkan.
-4. **PULANG**: Guru scan QR khusus Ketua Kelas. Seluruh HP kelas ditandai Diambil.
+2. **SIANG (KBM)**: Guru klik Edit Massal untuk mencatat pinjaman. Status menjadi Dipinjam.
+3. **SIANG (Selesai KBM)**: Guru klik Edit Massal lagi. Status kembali Dikumpulkan.
+4. **PULANG**: Guru menggunakan fitur Edit Massal untuk menandai HP Diambil.
 
 </details>
 
@@ -115,9 +105,7 @@
 |---|:---:|:---:|:---:|
 | Monitoring Dashboard | ✅ | ✅ | ❌ |
 | Pengeditan Status | ✅ | ✅ | ❌ |
-| Pengambilan (Scan QR) | ✅ | ✅ | ❌ |
 | Pengecekan Pagi | ✅ (Pilih Kelas) | ❌ | ✅ (Kelas Sendiri) |
-| Kelola Kartu QR | ✅ | ❌ | ❌ |
 | Laporan & Rekap | ✅ | ❌ | ❌ |
 | Data Siswa & Impor | ✅ | ❌ | ❌ |
 | Manajemen User | ✅ | ❌ | ❌ |
@@ -132,7 +120,6 @@ Endpoint API memvalidasi transisi state secara ketat (HTTP 409 Conflict jika ile
 - `POST /api?nis={nis}&pinjam=1&guru={nama}` : Catat izin pinjam.
 - `POST /api?nis={nis}&kembali=1&guru={nama}` : Catat pengembalian.
 - `POST /api?nis={nis}&ambil=1` : Catat pengambilan.
-- `POST /api?ambil_semua=1&km_id={km_id}` : Pengambilan massal via QR KM.
 
 ---
 
@@ -145,11 +132,9 @@ Endpoint API memvalidasi transisi state secara ketat (HTTP 409 Conflict jika ile
 ├── app/Http/Controllers/
 │   ├── MonitoringController.php   # Analitik & Tren
 │   ├── EditController.php         # Manipulasi massal
-│   ├── ApiController.php          # Endpoint QR Scanner
 │   └── ... 
 ├── resources/views/
 │   ├── layouts/app.blade.php      # Layout responsif per peran
-│   ├── scan.blade.php             # Antarmuka kamera QR
 │   ├── edit.blade.php             # Form aksi massal
 │   └── ... 
 ├── routes/web.php                 # Ruting sistem & Middleware Role
