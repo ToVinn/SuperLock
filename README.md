@@ -73,16 +73,6 @@
    php artisan serve
    ```
 
-### Akun Bawaan (Seeder)
-| Nama | Username | Password | Peran |
-|---|---|---|---|
-| Administrator | `admin` | `admin123` | Admin |
-| Raka Wibowo | `raka` | `admin123` | KM (X PPLG 1) |
-| Dewi Lestari | `dewi` | `admin123` | KM (X PPLG 2) |
-| Bu Sari | `sari` | `admin123` | Guru |
-
-> Segera ubah kata sandi di lingkungan produksi.
-
 ---
 
 ## Alur Kerja (Workflow)
